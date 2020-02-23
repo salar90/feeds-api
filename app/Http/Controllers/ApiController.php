@@ -1,6 +1,10 @@
 <?php
 namespace App\Http\Controllers;
 
+use FeedException;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Request;
+
 class ApiController extends Controller
 {
     /**
@@ -13,20 +17,37 @@ class ApiController extends Controller
         //
     }
 
-    public function getFeed()
+    public function getFeed(Request $request)
     {
+        $defaultList = [
+            'https://salar.one/feed/',
+            'https://medium.com/feed/@salar_one'
+        ];
+
+        $list = $request->get('list');
         
-        $feed1 = simplexml_load_file('http://salar.one/feed/');
-        $feed2 = simplexml_load_file('https://medium.com/feed/@salar_one');
-        // $merged = \MergeRSS\merge_rss(array($feed1, $feed2));
-        // echo json_encode($merged);
+        if(empty($list)){
+            $list = $defaultList;
+        }
 
-        $feed1 = 'https://salar.one/feed/';
-        $feed2 = 'https://medium.com/feed/@salar_one';
+        $all = collect();
+        foreach($list as $feed){
+            try{
+                $rss = \Feed::loadRss($feed);
+                $rssArray = $rss->toArray();
+                $all = $all->merge($rssArray['item']);
+            }catch(FeedException $e){
+                continue;
+            }
+        }
+
+        return $all;
+        
 
 
-        $rss = \Feed::loadRss($feed2);
-        return $rss->toArray();
+
+        // $rss = \Feed::loadRss($fee2);
+        // return $rss->toArray();
 
 
     }
