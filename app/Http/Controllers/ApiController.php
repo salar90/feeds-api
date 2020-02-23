@@ -45,8 +45,9 @@ class ApiController extends Controller
             }catch(\Exception $e){
                 continue;
             }
-            
         }
+
+        $all = $all->sortByDesc('timestamp')->values()->all();
 
         return $all;
 
