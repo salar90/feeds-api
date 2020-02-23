@@ -49,13 +49,6 @@ class ApiController extends Controller
         }
 
         return $all;
-        
-
-
-
-        // $rss = \Feed::loadRss($fee2);
-        // return $rss->toArray();
-
 
     }
 }
