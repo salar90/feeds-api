@@ -43,9 +43,9 @@ class ApiController extends Controller
                 
                 $all = $all->merge($rssArray['item']);
             }catch(\Exception $e){
-                return $e->getMessage();
                 continue;
             }
+            
         }
 
         return $all;
