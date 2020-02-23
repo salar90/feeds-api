@@ -35,8 +35,15 @@ class ApiController extends Controller
             try{
                 $rss = \Feed::loadRss($feed);
                 $rssArray = $rss->toArray();
+                $rssArray['item'] = array_map(function($item){
+                    $item['pubDate'] = date(DATE_RSS, strtotime($item['pubDate']) );
+                    return $item;
+                }, $rssArray['item']);
+                
+                
                 $all = $all->merge($rssArray['item']);
-            }catch(FeedException $e){
+            }catch(\Exception $e){
+                return $e->getMessage();
                 continue;
             }
         }
