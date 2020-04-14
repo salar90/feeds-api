@@ -37,6 +37,7 @@ class ApiController extends Controller
                 $rssArray = $rss->toArray();
                 $rssArray['item'] = array_map(function($item){
                     $item['pubDate'] = date(DATE_RSS, strtotime($item['pubDate']) );
+                    unset($item['content:encoded']);
                     return $item;
                 }, $rssArray['item']);
                 
